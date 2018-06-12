@@ -1,0 +1,51 @@
+version: '3.6'
+services:
+  nifi:
+    image: apache/nifi:1.6.0
+    ports:
+      - "${NIFI_WEB_HTTP_PORT}:${NIFI_WEB_HTTP_PORT}"
+    environment:
+      - NIFI_WEB_HTTP_PORT=${NIFI_WEB_HTTP_PORT}
+    volumes:
+      - type: bind
+        source: ./data/
+        target: /data
+    volumes:
+      - ./jupyter-notebooks:/home/jovyan/work
+  spark-master:
+    build:
+      context: ./src/spark-master/
+    image: lovenv/spark-master:2.3.0-hadoop2.7
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+      - PYSPARK_PYTHON=/usr/bin/python3.6
+  spark-worker:
+    build:
+      context: ./src/spark-worker/
+    image: lovenv/spark-worker:2.3.0-hadoop2.7
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - PYSPARK_PYTHON=/usr/bin/python3.6
+  pyspark-notebook:
+    image: jupyter/pyspark-notebook:latest
+    ports:
+      - "8888:8888"
+    depends_on:
+      - spark-master
+    environment:
+      - PYSPARK_PYTHON=/usr/bin/python3.6
+      - PYSPARK_DRIVER_PYTHON=/usr/bin/python3.6
+      - PYSPARK_DRIVER_PYTHON_OPTS=notebook
+  mongodb:
+    image: mongo:3.7
+    volumes:
+    - mongodb-configdb:/data/configdb
+    - mongodb-db:/data/db
+volumes:
+  mongodb-configdb:
+  mongodb-db:
