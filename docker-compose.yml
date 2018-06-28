@@ -10,8 +10,9 @@ services:
       - type: bind
         source: ./data/
         target: /data
-    volumes:
-      - ./jupyter-notebooks:/home/jovyan/work
+      - type: bind
+        source: ./src/convertcsvtojson/nifi-ConvertCSVToJSON-nar/target/nifi-ConvertCSVToJSON-nar-1.0-SNAPSHOT.nar
+        target: /opt/nifi/nifi-1.6.0/lib/nifi-ConvertCSVToJSON-nar-1.0-SNAPSHOT.nar
   spark-master:
     build:
       context: ./src/spark-master/
@@ -41,6 +42,8 @@ services:
       - PYSPARK_PYTHON=/usr/bin/python3.6
       - PYSPARK_DRIVER_PYTHON=/usr/bin/python3.6
       - PYSPARK_DRIVER_PYTHON_OPTS=notebook
+    volumes:
+      - ./jupyter-notebooks:/home/jovyan/work
   mongodb:
     image: mongo:3.7
     volumes:
