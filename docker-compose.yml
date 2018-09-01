@@ -1,7 +1,7 @@
 version: '3.6'
 services:
   nifi:
-    image: apache/nifi:1.6.0
+    image: apache/nifi:1.7.0
     ports:
       - "${NIFI_WEB_HTTP_PORT}:${NIFI_WEB_HTTP_PORT}"
     environment:
@@ -10,9 +10,6 @@ services:
       - type: bind
         source: ./data/
         target: /data
-      - type: bind
-        source: ./src/convertcsvtojson/nifi-ConvertCSVToJSON-nar/target/nifi-ConvertCSVToJSON-nar-1.0-SNAPSHOT.nar
-        target: /opt/nifi/nifi-1.6.0/lib/nifi-ConvertCSVToJSON-nar-1.0-SNAPSHOT.nar
   spark-master:
     build:
       context: ./src/spark-master/
