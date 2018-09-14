@@ -19,7 +19,7 @@ It is advisable to run using the `docker-compose.yml` file provided.
 Run instructions:
 
 * Build all docker containers with: `docker-compose build`
-* Run all docker containers with: `docker-compose up --scale spark-worker=N` where N is the number of the desired Apache Spark worker nodes.
+* Run all docker containers with: `docker-compose up -d --scale spark-worker=N` where N is the number of the desired Apache Spark worker nodes.
 
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning.
