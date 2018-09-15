@@ -1,7 +1,9 @@
 version: '3.6'
 services:
   nifi:
-    image: apache/nifi:1.7.0
+    build:
+      context: ./src/nifi/
+    image: lovenv/nifi:1.7.0
     ports:
       - "${NIFI_WEB_HTTP_PORT}:${NIFI_WEB_HTTP_PORT}"
     environment:
