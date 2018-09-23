@@ -4,6 +4,8 @@ services:
     build:
       context: ./src/nifi/
     image: lovenv/nifi:1.7.0
+    depends_on:
+      - mongodb
     ports:
       - "${NIFI_WEB_HTTP_PORT}:${NIFI_WEB_HTTP_PORT}"
     environment:
@@ -13,6 +15,8 @@ services:
         source: ./data/
         target: /data
   spark-master:
+    depends_on:
+      - mongodb
     build:
       context: ./src/spark-master/
     image: lovenv/spark-master:2.3.1-hadoop2.7
@@ -38,7 +42,7 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      - spark-master
+      - mongodb
     environment:
       - PYSPARK_PYTHON=/usr/bin/python3.6
       - PYSPARK_DRIVER_PYTHON=/usr/bin/python3.6
